@@ -51,7 +51,7 @@ function openModal(target, type, id = null) {
             pondFileUpload()
         },
         error: function (xhr, status, error) {
-            console.log(error)
+            console.log(xhr)
             console.error("Error fetching data:", error);
         }
     });

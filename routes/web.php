@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\ContentManagement\BalePageController;
+use App\Http\Controllers\Admin\ContentManagement\EcoparkPageController;
+use App\Http\Controllers\Admin\ContentManagement\HomePageController;
+use App\Http\Controllers\Admin\ContentManagement\OurStoryPageController;
 use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Admin\MasterData\SocialMediaController;
 use App\Http\Controllers\ProfileController;
@@ -29,6 +33,12 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('md-supplier', SupplierController::class);
             // CMS
             Route::resource('md-social-media', SocialMediaController::class);
+        });
+        Route::group(['prefix' => 'content-management'], function () {
+            Route::resource('homepage', HomePageController::class);
+            Route::resource('ourstorypage', OurStoryPageController::class);
+            Route::resource('ecoparkpage', EcoparkPageController::class);
+            Route::resource('balepage', BalePageController::class);
         });
     });
 });

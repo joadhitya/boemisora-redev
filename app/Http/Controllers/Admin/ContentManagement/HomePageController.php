@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Admin\MasterData;
+namespace App\Http\Controllers\Admin\ContentManagement;
 
 use App\Helpers\GeneralHelper;
 use App\Http\Controllers\Controller;
-use App\Models\General\LogActivity;
 use App\Models\MasterData\SocialMedia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Image;
 
-class SocialMediaController extends Controller
+class HomePageController extends Controller
 {
     public function index()
     {
-        return view('admin.master-data.social-media.index');
+        return view('admin.content-management.pages.homepage.index');
     }
 
     public function create()
@@ -22,18 +19,6 @@ class SocialMediaController extends Controller
         $data = [];
         return view('admin.master-data.social-media.form', ["data" => $data, "type" => 'create']);
     }
-
-    private function convertAndCompressImage($inputPath, $outputPath)
-    {
-        // try {
-        //     // $image = Image::make($inputPath)->encode('webp', 90); // 90 is the compression quality
-        //     $image->save($outputPath);
-        //     return true;
-        // } catch (\Exception $e) {
-        //     return false;
-        // }
-    }
-
 
     public function store(Request $request)
     {
