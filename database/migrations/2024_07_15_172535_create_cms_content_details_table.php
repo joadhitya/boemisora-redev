@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('cms_content_details', function (Blueprint $table) {
             $table->string('id', 21)->primary();
             $table->string('id_master', 21);
-            // $table->foreignId('id_master')->constrained('cms_content_masters');
-            $table->enum('type', ['label', 'image', 'undefined'])->default('undefined');
+            $table->enum('type', ['label', 'image', 'undefined', 'button'])->default('undefined');
+            $table->string('code');
             $table->string('name');
-            $table->binary('content')->nullable();
+            $table->text('class')->nullable();
+            $table->binary('content_id')->nullable();
+            $table->binary('content_en')->nullable();
             $table->integer('sequence')->nullable();
             $table->string('description')->nullable();
             $table->string('style')->nullable();
@@ -28,6 +30,7 @@ return new class extends Migration
             $table->json('created_by');
             $table->json('updated_by');
             $table->timestamps();
+            $table->foreign('id_master')->references('id')->on('cms_content_master')->onDelete('cascade');
         });
     }
 

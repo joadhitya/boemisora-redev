@@ -72,7 +72,7 @@ $menuItems = [
     ],
     'content-management' => [
         'icon' => 'fe fe-grid fe-16',
-        'text' => 'Profile - Master',
+        'text' => 'Halaman Website',
         'items' => [
             ['route' => 'homepage.index', 'segment' => 'homepage', 'text' => 'Homepage'],
             ['route' => 'ourstorypage.index', 'segment' => 'ourstorypage', 'text' => 'Our Story'],

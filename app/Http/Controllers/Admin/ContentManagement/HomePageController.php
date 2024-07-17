@@ -4,14 +4,18 @@ namespace App\Http\Controllers\Admin\ContentManagement;
 
 use App\Helpers\GeneralHelper;
 use App\Http\Controllers\Controller;
+use App\Models\ContentManagement\ContentDetail;
+use App\Models\ContentManagement\ContentMaster;
 use App\Models\MasterData\SocialMedia;
 use Illuminate\Http\Request;
 
 class HomePageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.content-management.pages.homepage.index');
+        $target = $request->segment(count($request->segments()));
+        $data = ContentMaster::where('code', $target)->first();
+        return view('admin.content-management.pages.homepage.index', compact('target', 'data'));
     }
 
     public function create()
@@ -22,82 +26,35 @@ class HomePageController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            $id = GeneralHelper::generateNanoId();
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $extensionTypeSplit = explode('/', $file->getMimeType());
-                $extensionType = $extensionTypeSplit[1];
-                $filename = 'social-media-' . uniqid() . '.' . $extensionType;
-                $file->move(public_path('upload/images/social-media'), $filename);
-                $request->merge([
-                    'image' => $filename
-                ]);
-            }
-            $request->merge([
-                'id' => $id,
-                'created_by' => GeneralHelper::getAuthInfo(),
-                'updated_by' => json_encode([]),
-            ]);
-            $data = SocialMedia::create($request->all());
-            return response()->json([
-                'refference_id' => $id,
-                'data' => $data,
-                'message' => 'Berhasil menambahkan data Social Media ' . $request->name,
-                'activity' => 'Melakukan penambahan data Social Media',
-                'method' => 'POST',
-                'module' => 'Master Data - Social Media - Create',
-                'request_body' => json_encode($request->except('_token'))
-            ], 200);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'method' => 'POST',
-                'error_code' => 'MD-SOC-001',
-                'message' => $e->getMessage(),
-                'request_body' => json_encode($request->except('_token'))
-            ], 409);
-        }
     }
 
-    public function show(string $id)
+    public function show(string $id, Request $request)
     {
-        try {
-            if ($id == 'data') {
-                $data = SocialMedia::get();
-                return view('admin.master-data.social-media.display', ["data" => $data]);
-            } else {
-                $data = SocialMedia::findOrFail($id);
-                $logActivity = LogActivity::where('refference_id', $id)->orderBy('created_at', 'DESC')->get();
-
-                foreach ($logActivity as $la) {
-                    $oldData = $la->old_data ? json_decode($la->old_data, true) : [];
-                    $newData = $la->new_data ? json_decode($la->new_data, true) : [];
-                    $differences = GeneralHelper::compareData($oldData, $newData);
-                    $la->differences = $differences;
-                }
-                return view('admin.master-data.social-media.form', ["data" => $data, "logActivity" => $logActivity, "type" => 'detail', "target" => 'md-social-media']);
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'method' => 'GET',
-                'error_code' => 'MD-SOC-003',
-                'message' => $e->getMessage(),
-                'request_body' => []
-            ], 500);
+        $target = $request->segment(3);
+        // PREVIEW
+        if ($id == 'data') {
+        } else if ($id == 'preview') {
+            return view('admin.content-management.pages.homepage.preview');
+        } else if ($id == 'manage') {
+            $master = ContentMaster::where('code', $target)->first();
+            $data = ContentDetail::where('id_master', $master->id)->get();
+            return view('admin.content-management.pages.homepage.display', compact('master', 'data'));
+        } else {
+            $data = ContentDetail::where('id', $id)->first();
+            return view('admin.content-management.pages.homepage.form', compact('data'));
         }
     }
 
     public function edit(string $id)
     {
-        $data = SocialMedia::findOrFail($id);
-        return view('admin.master-data.social-media.form', ["data" => $data, "type" => 'edit']);
+        $data = ContentDetail::where('id', $id)->first();
+        return view('admin.content-management.pages.homepage.form', compact('data'));
     }
 
     public function update(Request $request, string $id)
     {
         try {
-            $data = SocialMedia::findOrFail($id);
+            $data = ContentDetail::findOrFail($id);
             $oldData = $data->toJson();
 
             $request->merge([
@@ -109,10 +66,10 @@ class HomePageController extends Controller
             return response()->json([
                 'refference_id' => $id,
                 'data' => $data,
-                'message' => 'Berhasil mengubah data social-media ' . $request->name,
-                'activity' => 'Melakukan perubahan data social-media',
+                'message' => 'Berhasil mengubah data konten' . $request->name,
+                'activity' => 'Melakukan perubahan data konten homepage',
                 'method' => 'PATCH',
-                'module' => 'Master Data - social-media - Update',
+                'module' => 'CMS Homepage - ' . $request->name . ' - Update',
                 'request_body' => json_encode($request->except('_token')),
                 'old_data' => $oldData
             ], 200);

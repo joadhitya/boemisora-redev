@@ -9,10 +9,19 @@ use App\Http\Controllers\Admin\MasterData\SocialMediaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\MasterData\SupplierController;
+use App\Http\Controllers\Client\PagesController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::group(
+    ['namespace' => 'Client'],
+    function () {
+        Route::get('/', [PagesController::class, 'index'])->name('home');
+    }
+);
+#endregion
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
