@@ -56,21 +56,21 @@ class HomePageController extends Controller
         try {
             $data = ContentDetail::findOrFail($id);
             $oldData = $data->toJson();
-
-            $request->merge([
-                'updated_by' => GeneralHelper::getAuthInfo()
-            ]);
-
-            $data->update($request->all());
-
+            $payload = $request->all();
+            if ($request->hasFile('image')) {
+                $image = GeneralHelper::uploadFile($request->file('image'), 'homepage', 'upload/images/content/');
+                $payload['image'] = $image;
+            }
+            $payload['updated_by'] = GeneralHelper::getAuthInfo();
+            $data->update($payload);
             return response()->json([
                 'refference_id' => $id,
                 'data' => $data,
-                'message' => 'Berhasil mengubah data konten' . $request->name,
+                'message' => 'Berhasil mengubah data konten ' . $request->name,
                 'activity' => 'Melakukan perubahan data konten homepage',
                 'method' => 'PATCH',
                 'module' => 'CMS Homepage - ' . $request->name . ' - Update',
-                'request_body' => json_encode($request->except('_token')),
+                'request_body' => $request->except('_token'),
                 'old_data' => $oldData
             ], 200);
         } catch (\Exception $e) {
@@ -78,10 +78,11 @@ class HomePageController extends Controller
                 'method' => 'PATCH',
                 'error_code' => 'MD-SOC-002',
                 'message' => $e->getMessage(),
-                'request_body' => json_encode($request->except('_token'))
+                'request_body' => $request->except('_token')
             ], 500);
         }
     }
+
 
     public function destroy(string $id)
     {

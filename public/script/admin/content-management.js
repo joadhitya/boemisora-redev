@@ -73,6 +73,11 @@ function manageData(type, id = null) {
                 e.preventDefault();
                 $(`#add-${data.url6}`).attr("disabled", true);
                 var formData = new FormData(this);
+                var pondFiles = $('.my-pond').filepond('getFiles');
+                pondFiles.forEach(fileItem => {
+                    formData.append('image', fileItem.file);
+                });
+
                 $.ajax({
                     url: url,
                     type: "post",
@@ -100,6 +105,10 @@ function manageData(type, id = null) {
                 e.preventDefault();
                 $(`#edit-${data.url5}`).attr("disabled", true);
                 var formData = new FormData(this)
+                var pondFiles = $('.my-pond').filepond('getFiles');
+                pondFiles.forEach(fileItem => {
+                    formData.append('image', fileItem.file);
+                });
                 var checkAdditionalFile = false
 
                 for (let data of formData) {

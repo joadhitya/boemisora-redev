@@ -105,4 +105,12 @@ class GeneralHelper
             return false;
         }
     }
+
+    public static function uploadFile($file, $prefix, $path)
+    {
+        $extension = $file->getClientOriginalExtension();
+        $filename = $prefix . '-' . uniqid() . '.' . $extension;
+        $file->move(public_path('upload/images/content/'), $filename);
+        return $path . $filename;
+    }
 }

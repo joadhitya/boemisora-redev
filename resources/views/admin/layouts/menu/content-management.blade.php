@@ -62,25 +62,26 @@
 
 
 @php
-$menuItems = [
-    'master-data' => [
-        'icon' => 'fe fe-box fe-16',
-        'text' => 'Data Master',
-        'items' => [
-            ['route' => 'md-social-media.index', 'segment' => 'social-media', 'text' => 'Social Media'],
-        ]
-    ],
-    'content-management' => [
-        'icon' => 'fe fe-grid fe-16',
-        'text' => 'Halaman Website',
-        'items' => [
-            ['route' => 'homepage.index', 'segment' => 'homepage', 'text' => 'Homepage'],
-            ['route' => 'ourstorypage.index', 'segment' => 'ourstorypage', 'text' => 'Our Story'],
-            ['route' => 'ecoparkpage.index', 'segment' => 'ecoparkpage', 'text' => 'Ecopark'],
-            ['route' => 'balepage.index', 'segment' => 'balepage', 'text' => 'Bale'],
-        ]
-    ]
-];
+    $menuItems = [
+        'master-data' => [
+            'icon' => 'fe fe-box fe-16',
+            'text' => 'Data Master',
+            'items' => [
+                ['route' => 'md-social-media.index', 'segment' => 'social-media', 'text' => 'Social Media'],
+                ['route' => 'md-social-media.index', 'segment' => 'what-to-do', 'text' => 'What to Do'],
+            ],
+        ],
+        'content-management' => [
+            'icon' => 'fe fe-grid fe-16',
+            'text' => 'Halaman Website',
+            'items' => [
+                ['route' => 'homepage.index', 'segment' => 'homepage', 'text' => 'Homepage'],
+                ['route' => 'ourstorypage.index', 'segment' => 'ourstorypage', 'text' => 'Our Story'],
+                ['route' => 'ecoparkpage.index', 'segment' => 'ecoparkpage', 'text' => 'Ecopark'],
+                ['route' => 'balepage.index', 'segment' => 'balepage', 'text' => 'Bale'],
+            ],
+        ],
+    ];
 @endphp
 
 @foreach ($menuItems as $menuKey => $menu)
@@ -94,10 +95,12 @@ $menuItems = [
                 <span class="ml-3 item-text">{{ $menu['text'] }}</span>
                 <span class="sr-only">(current)</span>
             </a>
-            <ul class="collapse list-unstyled pl-4 w-100 @if (Request::segment(2) == $menuKey) show @endif" id="{{ $menuKey }}">
+            <ul class="collapse list-unstyled pl-4 w-100 @if (Request::segment(2) == $menuKey) show @endif"
+                id="{{ $menuKey }}">
                 @foreach ($menu['items'] as $item)
                     <li class="nav-item w-100">
-                        <a class="nav-link @if (Request::segment(3) == $item['segment']) active-label @endif" href="{{ route($item['route']) }}">
+                        <a class="nav-link @if (Request::segment(3) == $item['segment']) active-label @endif"
+                            href="{{ route($item['route']) }}">
                             <span class="item-text">{{ $item['text'] }}</span>
                         </a>
                     </li>
