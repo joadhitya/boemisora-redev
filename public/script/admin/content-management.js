@@ -28,56 +28,44 @@ const url = `/admin/${data.url4}/${data.url5}`;
 $(document).ready(function () {
     activityDetail(`${data.url5}`, 'preview')
 });
-
 const activityDetail = (type, action, id = null) => {
-    $(`#activity-detail-${type}`).html(loadingElement)
-    var urlTarget;
-    if (action == 'preview' || action == 'manage') {
-        urlTarget = `${url}/${action}`
-    } else {
-        urlTarget = `${url}/${id}`
-    }
+    const $detailElement = $(`#activity-detail-${type}`);
+    $detailElement.html(loadingElement);
+    const urlTarget = ['preview', 'manage', 'layout-image'].includes(action) ? `${url}/${action}` : `${url}/${id}/edit`;
     $.ajax({
         type: "get",
         url: urlTarget,
-        data: {
-            type,
-            action,
-            id
-        },
-        success: function (response) {
-            if (action == 'preview' || action == 'manage') {
-                $(`#activity-detail-${type}`).html(response)
+        data: { type, action, id },
+        success: (response) => {
+            console.log(response)
+            $detailElement.html(response);
+
+            if (['preview', 'manage', 'layout-image'].includes(action)) {
                 $(`#table-${data.url5}`).DataTable();
             } else {
-                $(`#activity-detail-${type}`).html(response)
-
-                pondFileUpload()
-                var content_id = $("#content_id").val();
-                handleCkEditor("edit", content_id, 'content_id')
-
-                var content_en = $("#content_en").val();
-                handleCkEditor("edit", content_en, 'content_en')
+                pondFileUpload();
+                ['content_id', 'content_en'].forEach(content => {
+                    handleCkEditor("edit", $(`#${content}`).val(), content);
+                });
             }
-        }, error: function (err) {
-            console.log(err)
+        },
+        error: (err) => {
+            console.log(err);
         }
     });
 }
 
-
 function manageData(type, id = null) {
     switch (type) {
         case "save":
-            $(`#form-${data.url6}`).on("submit", function (e) {
+            $(`#form-${data.url5}`).on("submit", function (e) {
                 e.preventDefault();
-                $(`#add-${data.url6}`).attr("disabled", true);
+                $(`#add-${data.url5}`).attr("disabled", true);
                 var formData = new FormData(this);
                 var pondFiles = $('.my-pond').filepond('getFiles');
                 pondFiles.forEach(fileItem => {
                     formData.append('image', fileItem.file);
                 });
-
                 $.ajax({
                     url: url,
                     type: "post",
@@ -88,7 +76,8 @@ function manageData(type, id = null) {
                     processData: false,
                     success: function (response) {
                         handlingSuccessResponse("add", response.message)
-                        $(`#modal-${data.url6}`).modal("hide");
+                        $(`#modal-${data.url5}`).modal("hide");
+                        activityDetail(`${data.url5}`, 'layout-image')
                     },
                     error: function (err) {
                         console.log(err);
@@ -143,48 +132,28 @@ function manageData(type, id = null) {
             });
             break;
         case "delete":
-            $.ajax({
-                type: "post",
-                url: `${url}/check-category-content`,
-                data: { id },
-                dataType: "json",
-                success: function (response) {
-                    console.log(response)
-                    if (response.status == 400) {
-                        Toast.fire({
-                            icon: 'error',
-                            title: 'Tidak dapat menghapus konten'
-                        })
-                        return;
-                    }
 
-                    Swal.fire({
-                        title: "Apakah anda yakin ingin menghapus data?",
-                        text: "Data yang di hapus tidak dapat dikembalikan",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "red",
-                        cancelButtonColor: "grey",
-                        confirmButtonText: "Delete",
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                url: `${url}/${id}`,
-                                method: "delete",
-                                dataType: "json",
-                                success: function (response) {
-                                    handlingSuccessResponse("delete", response.message)
-                                },
-                                error: function (err) {
-                                    console.log(err);
-                                }
-                            });
+            Swal.fire({
+                title: "Apakah anda yakin ingin menghapus gambar?",
+                text: "Gambar yang sudah di hapus tidak dapat dikembalikan",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "red",
+                cancelButtonColor: "grey",
+                confirmButtonText: "Ya hapus!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "delete",
+                        url: `${url}/${id}`,
+                        success: function (response) {
+                            console.log(response)
+
+                            activityDetail(`${data.url5}`, 'layout-image')
+                        }, error: function (err) {
+                            console.log(err)
                         }
                     });
-
-                },
-                error: function (err) {
-                    console.log(err)
                 }
             });
             break;
@@ -299,3 +268,49 @@ let handlingSuccessResponse = (type, message) => {
 
 }
 
+
+function openModal(target, type, id = null) {
+    if (type == 'detail') {
+        $(`#modal-${data.url5}-image`).modal("show");
+        $(`#image-${data.url5}`).attr('src', `${$('meta[name="base-url"]').attr('content')}/${target}`);
+        return;
+    }
+
+    refreshForm();
+    const $contentForm = $(`#content-form-${target}`);
+    const modalElement = $(`#modal-${target}`);
+    $contentForm.html(loadingElement);
+    modalElement.modal("show");
+    let urlEndpoint = `${url}/layout-homepage`;
+    let showAdd = true;
+    let showEdit = false;
+
+    $.ajax({
+        type: "POST",
+        url: urlEndpoint,
+        data: {
+            target,
+            type,
+            id
+        },
+        success: function (response) {
+            $contentForm.html(response);
+            $(`#edit-${target}`).toggle(showEdit);
+            $(`#add-${target}`).toggle(showAdd);
+            console.log(response)
+            pondFileUpload()
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr)
+            console.error("Error fetching data:", error);
+        }
+    });
+
+}
+
+function refreshForm() {
+    $(`#add-${data.url5}`).attr("disabled", false);
+    $(`#form-${data.url5}`).off("submit");
+    $(`#form-${data.url5} input`).removeClass("error-form");
+    $(`#form-${data.url5} select`).removeClass("error-form-select");
+}

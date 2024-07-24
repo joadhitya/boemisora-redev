@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::group(['prefix' => 'content-management'], function () {
             Route::resource('homepage', HomePageController::class);
+            Route::post('homepage/layout-homepage', [HomePageController::class, 'layoutImage']);
             Route::resource('ourstorypage', OurStoryPageController::class);
             Route::resource('ecoparkpage', EcoparkPageController::class);
             Route::resource('balepage', BalePageController::class);

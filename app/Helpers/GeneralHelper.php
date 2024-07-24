@@ -110,7 +110,7 @@ class GeneralHelper
     {
         $extension = $file->getClientOriginalExtension();
         $filename = $prefix . '-' . uniqid() . '.' . $extension;
-        $file->move(public_path('upload/images/content/'), $filename);
+        $file->move(public_path($path), $filename);
         return $path . $filename;
     }
 }

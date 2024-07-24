@@ -14,6 +14,11 @@
                         <button type="button" class="btn btn-sm btn-outline-warning mr-1 float-right text-uppercase"
                             onclick="activityDetail('{{ $data->code }}','manage')"><i class="fe fe-edit"></i> Kelola
                             Konten</button>
+
+                        <button type="button" class="btn btn-sm btn-outline-primary mr-1 float-right text-uppercase"
+                            onclick="activityDetail('{{ $data->code }}','layout-image')"><i class="fe fe-image"></i>
+                            Layout
+                            Gambar</button>
                         <button type="button" class="btn btn-sm btn-outline-success mr-1 float-right text-uppercase"
                             onclick="activityDetail('{{ $data->code }}','preview')"><i class="fe fe-eye"></i> Preview
                             Konten</button>
@@ -41,7 +46,7 @@
 
 
 @section('modal')
-    {{-- @include('admin.content-management.profile-company.homepage.modal') --}}
+    @include('admin.content-management.pages.homepage.modal')
 @endsection
 
 @push('page-scripts')

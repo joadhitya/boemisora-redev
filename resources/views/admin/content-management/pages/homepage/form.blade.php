@@ -11,6 +11,8 @@
             @csrf
             <input type="hidden" class="form-control" id="id" name="id"
                 value="{{ $data ? $data->id : '' }}">
+
+            <input type="hidden" class="form-control" id="form_type" name="form_type" value="content">
             <div class="row">
                 <div class="col-md-4">
                     <label for="code">Kode:</label>
