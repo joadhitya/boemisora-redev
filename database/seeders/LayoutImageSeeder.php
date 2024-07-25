@@ -95,13 +95,13 @@ class LayoutImageSeeder extends Seeder
             ],
         ];
 
-        foreach ($images as $image) {
-            LayoutImage::create(array_merge([
-                'id' => Str::random(21),
-                'id_master' => $idMaster,
-                'created_by' => json_encode(['user_id' => 1, 'name' => 'Admin']),
-                'updated_by' => json_encode(['user_id' => 1, 'name' => 'Admin']),
-            ], $image));
-        }
+        // foreach ($images as $image) {
+        //     LayoutImage::create(array_merge([
+        //         'id' => Str::random(21),
+        //         'id_master' => $idMaster,
+        //         'created_by' => json_encode(['user_id' => 1, 'name' => 'Admin']),
+        //         'updated_by' => json_encode(['user_id' => 1, 'name' => 'Admin']),
+        //     ], $image));
+        // }
     }
 }

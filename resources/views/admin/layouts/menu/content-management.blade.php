@@ -68,10 +68,19 @@
             'text' => 'Data Master',
             'items' => [
                 ['route' => 'md-social-media.index', 'segment' => 'social-media', 'text' => 'Social Media'],
-                ['route' => 'md-social-media.index', 'segment' => 'what-to-do', 'text' => 'What to Do'],
+                ['route' => 'md-what-to-do.index', 'segment' => 'what-to-do', 'text' => 'What to Do'],
             ],
         ],
         'content-management' => [
+            'icon' => 'fe fe-grid fe-16',
+            'text' => 'Halaman Website',
+            'items' => [
+                ['route' => 'homepage.index', 'segment' => 'homepage', 'text' => 'Homepage'],
+                ['route' => 'ourstorypage.index', 'segment' => 'ourstorypage', 'text' => 'Our Story'],
+                ['route' => 'ecoparkpage.index', 'segment' => 'ecoparkpage', 'text' => 'Ecopark'],
+                ['route' => 'balepage.index', 'segment' => 'balepage', 'text' => 'Bale'],
+            ],
+
             'icon' => 'fe fe-grid fe-16',
             'text' => 'Halaman Website',
             'items' => [
@@ -109,3 +118,25 @@
         </li>
     </ul>
 @endforeach
+
+<ul class="navbar-nav flex-fill w-100 mb-2">
+    <li class="nav-item dropdown">
+        <a href="#cms-blog" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+            <i class="fe fe-image fe-16"></i>
+            <span class="ml-3 item-text">Kelola Blog</span>
+            <span class="sr-only">(current)</span>
+        </a>
+        <ul class="collapse list-unstyled pl-4 w-100 @if (Request::segment(2) == '') show @endif" id="cms-blog">
+            <li class="nav-item w-100">
+                <a class="nav-link @if (Request::segment(3) == '') active-label @endif" href="#">
+                    <span class="item-text">Katgori Blog</span>
+                </a>
+            </li>
+            <li class="nav-item w-100">
+                <a class="nav-link @if (Request::segment(3) == '') active-label @endif" href="#">
+                    <span class="item-text">Kelola Kata Terlarang</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>

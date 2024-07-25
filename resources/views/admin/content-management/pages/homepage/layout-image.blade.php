@@ -16,22 +16,28 @@
             </div>
         </div>
     </div>
+    <style>
+        {!! $master->style_css !!}
+    </style>
     <div class="card-body px-0">
         <div class="row">
-            <style>
-                {!! $master->style_css !!}
-            </style>
             <div class="col-md-7">
-                <div class="masonry">
-                    @foreach ($data as $key => $item)
-                        <div class="masonry-item">
-                            <img src="{{ asset($item->image) }}" alt="Placeholder Image {{ $key + 1 }}">
-                            <h5 class="image-number" onclick="openModal('{{ $item->image }}','detail')">
-                                {{ $item->sequence }}
-                            </h5>
-                        </div>
-                    @endforeach
-                </div>
+                @if ($data && count($data) > 0)
+                    <div class="masonry">
+                        @foreach ($data as $key => $item)
+                            <div class="masonry-item">
+                                <img src="{{ asset($item->image) }}" alt="Placeholder Image {{ $key + 1 }}">
+                                <h5 class="image-number" onclick="openModal('{{ $item->image }}','detail')">
+                                    {{ $item->sequence }}
+                                </h5>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="alert alert-warning" role="alert">
+                        <span class="fe fe-alert-octagon fe-16 mr-2"></span> Tidak terdapat data gambar Homepage
+                    </div>
+                @endif
             </div>
             <div class="col-md-5 px-0">
                 <div class="card-body p-0">
@@ -45,8 +51,7 @@
                             </tr>
                         </thead>
                         <tbody>
-
-                            @foreach ($data as $key => $image)
+                            @forelse ($data as $key => $image)
                                 <tr class="">
                                     <td class="w-10p text-center">{{ $image->sequence }}</td>
                                     <td class="w-20p">{{ $image->type }}</td>
@@ -66,7 +71,11 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">Belum terdapat data gambar Homepage</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
 

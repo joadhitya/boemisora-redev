@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\MasterData\SocialMediaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\MasterData\SupplierController;
+use App\Http\Controllers\Admin\MasterData\WhatToDoController;
 use App\Http\Controllers\Client\PagesController;
 
 Route::group(
@@ -39,9 +40,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('general/log-record', GeneralController::class);
         Route::group(['prefix' => 'master-data'], function () {
             // General
-            Route::resource('md-supplier', SupplierController::class);
             // CMS
             Route::resource('md-social-media', SocialMediaController::class);
+            Route::resource('md-what-to-do', WhatToDoController::class);
         });
         Route::group(['prefix' => 'content-management'], function () {
             Route::resource('homepage', HomePageController::class);
