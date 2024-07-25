@@ -57,93 +57,39 @@ function openModal(target, type, id = null) {
     });
 }
 
-function manageData(type, id = null) {
+
+async function manageData(type, id = null) {
     const url = `/admin/${data.url4}/${data.url5}`;
-    switch (type) {
-        case "save":
-            var textConfirmation = `Are you sure want add data ${data.url5.replace("-", " ")}?`;
-            createData(textConfirmation, data.url5, url);
-            break;
-        case "update":
-            var id = $("#id").val();
-            var textConfirmation = `Are you sure want to update data ${data.url5.replace("-", " ")}?`;
-            updateData(textConfirmation, data.url5, url, id);
-            break;
-        case "delete":
-            deleteData(data.url5, url, id);
-            break;
+    try {
+        switch (type) {
+            case "save":
+                const saveConfirmation = `Are you sure you want to add data ${data.url5.replace("-", " ")}?`;
+                const response = await createData(saveConfirmation, data.url5, url);
+                successResponse(
+                    "add",
+                    data.url5,
+                    response.message,
+                    response.data.id,
+                    `${url}/data`
+                );
+                break;
+
+            case "update":
+                const updateConfirmation = `Are you sure you want to update data ${data.url5.replace("-", " ")}?`;
+                await updateData(updateConfirmation, data.url5, url, id);
+                break;
+
+            case "delete":
+                await deleteData(data.url5, url, id);
+                break;
+
+            default:
+                console.error("Invalid type specified");
+                break;
+        }
+    } catch (error) {
+        console.log(error)
+        console.error("An error occurred:", error);
+        // Handle errors here
     }
-}
-
-function refreshForm() {
-    $(`#add-${data.url5}`).attr("disabled", false);
-    $(`#form-${data.url5}`).off("submit");
-    $(`#form-${data.url5} input`).removeClass("error-form");
-    $(`#form-${data.url5} select`).removeClass("error-form-select");
-}
-
-function handleError(err, err_log, type) {
-    refreshForm();
-    Toast.fire({
-        icon: "error",
-        title: "Something went wrong"
-    });
-
-    // switch (type) {
-    //     case "status":
-    //         if (err.status == 422) {
-    //             if (typeof err_log.status_name !== "undefined") {
-    //                 Toast.fire({
-    //                     icon: "error",
-    //                     title: err_log.status_name[0]
-    //                 });
-    //             }
-    //             if (typeof err_log.status_code !== "undefined") {
-    //                 Toast.fire({
-    //                     icon: "error",
-    //                     title: err_log.status_code[0]
-    //                 });
-    //             }
-    //         } else {
-    //             Toast.fire({
-    //                 icon: "error",
-    //                 title: "Something went wrong"
-    //             });
-    //         }
-    //         break;
-    //     case "booklet":
-    //         if (err.status == 422) {
-    //             if (typeof err_log.id_category !== "undefined") {
-    //                 Toast.fire({
-    //                     icon: "error",
-    //                     title: err_log.id_category[0]
-    //                 });
-    //             }
-    //             if (typeof err_log.code !== "undefined") {
-    //                 Toast.fire({
-    //                     icon: "error",
-    //                     title: err_log.code[0]
-    //                 });
-    //             }
-    //             if (typeof err_log.name !== "undefined") {
-    //                 Toast.fire({
-    //                     icon: "error",
-    //                     title: err_log.name[0]
-    //                 });
-    //             }
-    //             if (typeof err_log.link !== "undefined") {
-    //                 Toast.fire({
-    //                     icon: "error",
-    //                     title: err_log.link[0]
-    //                 });
-    //             }
-    //         } else {
-    //             Toast.fire({
-    //                 icon: "error",
-    //                 title: "Something went wrong"
-    //             });
-    //         }
-    //     default:
-    //         break;
-    // }
 }

@@ -12,7 +12,7 @@ $(document).on(function () {
 // REUSABLE ELEMENT
 
 
-function successResponse(type, target, message, id = null, url) {
+function successResponse(type, target, message, id = null, url, formType = 'form') {
     $(`#modal-${target}`).modal("hide");
     $(`#form-${target}`).unbind("submit");
     displayData(`${url}`, target, id);
@@ -183,45 +183,37 @@ function displayData(url, target, id = null) {
 }
 
 function createData(textConfirmation, target, url, closeForm = false) {
-    $(`#form-${target}`).on("submit", function (e) {
-        e.preventDefault();
-        $(`#add-${target}`).attr("disabled", true);
-        var formData = new FormData(this);
+    return new Promise((resolve, reject) => {
+        $(`#form-${target}`).on("submit", function (e) {
+            e.preventDefault();
+            $(`#add-${target}`).attr("disabled", true);
+            var formData = new FormData(this);
+            var pondFiles = $('.my-pond').filepond('getFiles');
+            pondFiles.forEach(fileItem => {
+                formData.append('image', fileItem.file);
+            });
 
-        // Add FilePond files to formData
-        var pondFiles = $('.my-pond').filepond('getFiles');
-        pondFiles.forEach(fileItem => {
-            formData.append('image', fileItem.file);
-        });
-
-        $.ajax({
-            url: url,
-            type: "post",
-            data: formData,
-            dataType: "json",
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                successResponse(
-                    "add",
-                    target,
-                    response.message,
-                    response.data.id,
-                    `${url}/data`
-                );
-
-                console.log(response);
-                createLogRecord('success', response, url);
-            },
-            error: function (err) {
-                console.log(err);
-                $(`#add-${target}`).attr("disabled", false);
-                $(`#form-${target}`).off("submit");
-                let err_log = err.responseJSON.errors;
-                createLogRecord('error', err.responseJSON, url);
-                handleError(err, err_log, target);
-            }
+            $.ajax({
+                url: url,
+                type: "post",
+                data: formData,
+                dataType: "json",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response, textStatus, jqXHR) {
+                    createLogRecord('success', response, url);
+                    resolve(response);
+                },
+                error: function (err) {
+                    $(`#add-${target}`).attr("disabled", false);
+                    $(`#form-${target}`).off("submit");
+                    let err_log = err.responseJSON.errors;
+                    createLogRecord('error', err.responseJSON, url);
+                    handleError(err, err_log, target);
+                    reject(err); // Reject the promise with the error
+                }
+            });
         });
     });
 }
@@ -454,5 +446,22 @@ function pondFileUpload() {
         $('.my-pond').on('FilePond:processfile', function (e) {
             console.log('file processed', e);
         });
+    });
+}
+
+
+
+function refreshForm() {
+    $(`#add-${data.url5}`).attr("disabled", false);
+    $(`#form-${data.url5}`).off("submit");
+    $(`#form-${data.url5} input`).removeClass("error-form");
+    $(`#form-${data.url5} select`).removeClass("error-form-select");
+}
+
+function handleError(err, err_log, type) {
+    refreshForm();
+    Toast.fire({
+        icon: "error",
+        title: "Something went wrong"
     });
 }

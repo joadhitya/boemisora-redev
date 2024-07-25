@@ -1,115 +1,56 @@
-{{-- <p class="text-muted nav-heading mt-1 mb-1">
-    <span>Master Data</span>
-</p>
-
-
-<ul class="navbar-nav flex-fill w-100 mb-2">
-    <li class="nav-item dropdown">
-        <a href="#cms-master-data" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-            <i class="fe fe-box fe-16"></i>
-            <span class="ml-3 item-text">Data Master</span><span class="sr-only">(current)</span>
-        </a>
-        <ul class="collapse list-unstyled pl-4 w-100  @if (Request::segment(2) == 'master-data') show @endif"
-            id="cms-master-data">
-            <li class="nav-item w-100">
-                <a class="nav-link @if (Request::segment(3) == 'social-media') active-label @endif"
-                    href="{{ route('md-social-media.index') }}">
-                    <span class="item-text">Social Media</span>
-                </a>
-            </li>
-        </ul>
-    </li>
-</ul>
-
-<p class="text-muted nav-heading mt-1 mb-1">
-    <span>Content Management</span>
-</p>
-<ul class="navbar-nav flex-fill w-100 mb-2">
-    <li class="nav-item dropdown">
-        <a href="#profile-master" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-            <i class="fe fe-grid fe-16"></i>
-            <span class="ml-3 item-text">Profile - Master</span><span class="sr-only">(current)</span>
-        </a>
-        <ul class="collapse list-unstyled pl-4 w-100  @if (Request::segment(2) == 'content-management') show @endif"
-            id="profile-master">
-            <li class="nav-item w-100">
-                <a class="nav-link @if (Request::segment(3) == 'homepage') active-label @endif"
-                    href="{{ route('homepage.index') }}">
-                    <span class="item-text">Homepage</span>
-                </a>
-            </li>
-            <li class="nav-item w-100">
-                <a class="nav-link @if (Request::segment(3) == 'ourstorypage') active-label @endif"
-                    href="{{ route('ourstorypage.index') }}">
-                    <span class="item-text">Our Story</span>
-                </a>
-            </li>
-            <li class="nav-item w-100">
-                <a class="nav-link @if (Request::segment(3) == 'ecoparkpage') active-label @endif"
-                    href="{{ route('ecoparkpage.index') }}">
-                    <span class="item-text">Ecopark</span>
-                </a>
-            </li>
-            <li class="nav-item w-100">
-                <a class="nav-link @if (Request::segment(3) == 'balepage') active-label @endif"
-                    href="{{ route('balepage.index') }}">
-                    <span class="item-text">Bale</span>
-                </a>
-            </li>
-        </ul>
-    </li>
-</ul> --}}
-
-
 @php
-    $menuItems = [
-        'master-data' => [
-            'icon' => 'fe fe-box fe-16',
-            'text' => 'Data Master',
+    $menus = [
+        [
+            'heading' => 'Master Data',
+            'icon' => 'fe-box',
+            'id' => 'master-data',
             'items' => [
-                ['route' => 'md-social-media.index', 'segment' => 'social-media', 'text' => 'Social Media'],
-                ['route' => 'md-what-to-do.index', 'segment' => 'what-to-do', 'text' => 'What to Do'],
+                ['url' => url('/admin/master-data/md-social-media'), 'text' => 'Social Media', 'active' => false],
+                ['url' => url('/admin/master-data/md-what-to-do'), 'text' => 'What to Do', 'active' => false],
             ],
         ],
-        'content-management' => [
-            'icon' => 'fe fe-grid fe-16',
-            'text' => 'Halaman Website',
+        [
+            'heading' => 'Content Management',
+            'icon' => 'fe-grid',
+            'id' => 'content-management',
             'items' => [
-                ['route' => 'homepage.index', 'segment' => 'homepage', 'text' => 'Homepage'],
-                ['route' => 'ourstorypage.index', 'segment' => 'ourstorypage', 'text' => 'Our Story'],
-                ['route' => 'ecoparkpage.index', 'segment' => 'ecoparkpage', 'text' => 'Ecopark'],
-                ['route' => 'balepage.index', 'segment' => 'balepage', 'text' => 'Bale'],
+                ['url' => url('/admin/content-management/homepage'), 'text' => 'Homepage', 'active' => true],
+                ['url' => url('/admin/content-management/ourstorypage'), 'text' => 'Our Story', 'active' => false],
+                ['url' => url('/admin/content-management/ecoparkpage'), 'text' => 'Ecopark', 'active' => false],
+                ['url' => url('/admin/content-management/balepage'), 'text' => 'Bale', 'active' => false],
             ],
-
-            'icon' => 'fe fe-grid fe-16',
-            'text' => 'Halaman Website',
+        ],
+        [
+            'heading' => 'Kelola Blog',
+            'icon' => 'fe-image',
+            'id' => 'cms-blog',
             'items' => [
-                ['route' => 'homepage.index', 'segment' => 'homepage', 'text' => 'Homepage'],
-                ['route' => 'ourstorypage.index', 'segment' => 'ourstorypage', 'text' => 'Our Story'],
-                ['route' => 'ecoparkpage.index', 'segment' => 'ecoparkpage', 'text' => 'Ecopark'],
-                ['route' => 'balepage.index', 'segment' => 'balepage', 'text' => 'Bale'],
+                ['url' => url('/admin/master-data/md-category-blog'), 'text' => 'Kategori Blog', 'active' => false],
+                ['url' => url('/admin/content-management/blog'), 'text' => 'List Blog', 'active' => false],
+                ['url' => '#', 'text' => 'Kelola Kata Terlarang', 'active' => false],
             ],
         ],
     ];
 @endphp
 
-@foreach ($menuItems as $menuKey => $menu)
-    <p class="text-muted nav-heading mt-1 mb-1">
-        <span>{{ ucwords(str_replace('-', ' ', $menuKey)) }}</span>
-    </p>
+@foreach ($menus as $menu)
+    @if ($menu['heading'])
+        <p class="text-muted nav-heading mt-1 mb-1">
+            <span>{{ $menu['heading'] }}</span>
+        </p>
+    @endif
     <ul class="navbar-nav flex-fill w-100 mb-2">
         <li class="nav-item dropdown">
-            <a href="#{{ $menuKey }}" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-                <i class="{{ $menu['icon'] }}"></i>
-                <span class="ml-3 item-text">{{ $menu['text'] }}</span>
+            <a href="#{{ $menu['id'] }}" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                <i class="fe {{ $menu['icon'] }} fe-16"></i>
+                <span class="ml-3 item-text">{{ $menu['heading']}}</span>
                 <span class="sr-only">(current)</span>
             </a>
-            <ul class="collapse list-unstyled pl-4 w-100 @if (Request::segment(2) == $menuKey) show @endif"
-                id="{{ $menuKey }}">
+            <ul class="collapse list-unstyled pl-4 w-100 {{ $menu['id'] == 'content-management' ? '' : '' }}"
+                id="{{ $menu['id'] }}">
                 @foreach ($menu['items'] as $item)
                     <li class="nav-item w-100">
-                        <a class="nav-link @if (Request::segment(3) == $item['segment']) active-label @endif"
-                            href="{{ route($item['route']) }}">
+                        <a class="nav-link {{ $item['active'] ? 'active-label' : '' }}" href="{{ $item['url'] }}">
                             <span class="item-text">{{ $item['text'] }}</span>
                         </a>
                     </li>
@@ -118,25 +59,3 @@
         </li>
     </ul>
 @endforeach
-
-<ul class="navbar-nav flex-fill w-100 mb-2">
-    <li class="nav-item dropdown">
-        <a href="#cms-blog" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-            <i class="fe fe-image fe-16"></i>
-            <span class="ml-3 item-text">Kelola Blog</span>
-            <span class="sr-only">(current)</span>
-        </a>
-        <ul class="collapse list-unstyled pl-4 w-100 @if (Request::segment(2) == '') show @endif" id="cms-blog">
-            <li class="nav-item w-100">
-                <a class="nav-link @if (Request::segment(3) == '') active-label @endif" href="#">
-                    <span class="item-text">Katgori Blog</span>
-                </a>
-            </li>
-            <li class="nav-item w-100">
-                <a class="nav-link @if (Request::segment(3) == '') active-label @endif" href="#">
-                    <span class="item-text">Kelola Kata Terlarang</span>
-                </a>
-            </li>
-        </ul>
-    </li>
-</ul>

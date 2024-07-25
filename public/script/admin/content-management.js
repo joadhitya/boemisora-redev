@@ -37,7 +37,6 @@ const activityDetail = (type, action, id = null) => {
         url: urlTarget,
         data: { type, action, id },
         success: (response) => {
-            console.log(response)
             $detailElement.html(response);
 
             if (['preview', 'manage', 'layout-image'].includes(action)) {

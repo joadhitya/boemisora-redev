@@ -7,7 +7,6 @@ function MyCustomUploadAdapterPlugin(editor) {
 const handleCkEditor = async (type, value, target) => {
     const iFrameSrc = '//cdn.iframe.ly/api/iframe';
     const iFrameApiKey = 'b16898bedf18cfcc616578';
-
     try {
         const editor = await ClassicEditor.create(document.querySelector(`#${target}`), {
             mediaEmbed: {
