@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cms_blogs', function (Blueprint $table) {
             $table->string('id', 21)->primary();
-            $table->string('id_category');
+            $table->string('id_category', 21);
             $table->string('title');
             $table->string('headline');
             $table->string('keyword');
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->date('date_archieve')->nullable();
             $table->string('status')->default('DRAFT');
             $table->string('is_favorite')->default('no');
-            // $table->foreign('id_category')->references('id')->on('md_category_blogs')->onDelete('cascade');
+            $table->foreign('id_category')->references('id')->on('md_category_blogs')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

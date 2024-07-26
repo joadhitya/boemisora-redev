@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ContentSeeder::class);
         $this->call(LayoutImageSeeder::class);
         $this->call(BlogSeeder::class);
+        $this->call(MasterDataSeeder::class);
     }
 }

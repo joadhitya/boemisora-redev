@@ -13,11 +13,16 @@
             @foreach ($fields as $field)
                 <div class="col-md-{{ $field['col'] }}">
                     <label>{{ $field['label'] }}: </label>
-                    <div class="form-group">
-                        <input type="{{ $field['type'] }}" id="{{ $field['id'] }}" name="{{ $field['id'] }}"
-                            class="{{ $field['type'] == 'file' ? 'form-control-file my-pond' : 'form-control form-control-sm bg-transparent' }}"
-                            {{ $type == 'detail' ? 'readonly' : '' }} value="{{ $data->{$field['id']} ?? '' }}">
-                    </div>
+                    @if ($type == 'detail' && $field['type'] == 'file')
+                        <img src="{{ asset($data->image) }}" alt="{{ $data->name }}"
+                            class="card-img-top img-fluid rounded">
+                    @else
+                        <div class="form-group">
+                            <input type="{{ $field['type'] }}" id="{{ $field['id'] }}" name="{{ $field['id'] }}"
+                                class="{{ $field['type'] == 'file' ? 'form-control-file my-pond' : 'form-control form-control-sm bg-transparent' }}"
+                                {{ $type == 'detail' ? 'readonly' : '' }} value="{{ $data->{$field['id']} ?? '' }}">
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </div>

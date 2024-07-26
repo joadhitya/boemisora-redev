@@ -22,7 +22,7 @@
             <div class="col-md-6">
                 <label>Kategori Artikel: </label>
                 <div class="form-group">
-                    <select name="id_category[]" multiple id="id_category"
+                    <select name="id_category" id="id_category"
                         class="form-control form-control-sm bg-transparent select2-multi">
                         <option value="">--Silahkan Pilih Kategori--</option>
                         @foreach ($categories as $ca)

@@ -35,8 +35,8 @@ class Blog extends Model
 
     protected $dates = ['date_archieve', 'deleted_at'];
 
-    // public function category()
-    // {
-    //     return $this->belongsTo(CategoryBlog::class, 'id_category');
-    // }
+    public function category()
+    {
+        return $this->belongsTo(CategoryBlog::class, 'id_category');
+    }
 }

@@ -106,11 +106,25 @@ class GeneralHelper
         }
     }
 
-    public static function uploadFile($file, $prefix, $path)
+    public static function uploadFile($file, $prefix, $pathTarget)
     {
-        $extension = $file->getClientOriginalExtension();
-        $filename = $prefix . '-' . uniqid() . '.' . $extension;
-        $file->move(public_path($path), $filename);
-        return $path . $filename;
+        $originalPath = $file->getRealPath();
+        $originalExtension = $file->getClientOriginalExtension();
+        $filename = $prefix . '-' . uniqid() . '.' . $originalExtension;
+        $path = public_path('upload/images/what-to-do/');
+        if (!file_exists($path)) {
+            mkdir($path, 0755, true);
+        }
+        if ($originalExtension === 'jpeg' || $originalExtension === 'jpg') {
+            $imageResource = imagecreatefromjpeg($originalPath);
+            imagejpeg($imageResource, $path . '/' . $filename, 75);
+        } elseif ($originalExtension === 'png') {
+            $imageResource = imagecreatefrompng($originalPath);
+            imagepng($imageResource, $path . '/' . $filename, 6);
+        } else {
+            throw new \Exception('Unsupported image format');
+        }
+        imagedestroy($imageResource);
+        return $pathTarget . $filename;
     }
 }

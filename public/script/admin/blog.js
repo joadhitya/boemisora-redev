@@ -82,12 +82,17 @@ function openForm(type, action, id = null) {
     const toggleVisibility = (actions) => {
         actions.forEach(({ selector, method }) => $(selector)[method]());
     };
+    let urlEndpoint = `${url}/create`;
+    if (type === 'edit') {
+        urlEndpoint = `${url}/${id}/edit`;
+    } else if (type === 'detail') {
+        urlEndpoint = `${url}/${id}`;
+    }
     if (action === "add" || action === "edit") {
         toggleVisibility(visibilityMap.addEdit);
         $.ajax({
             type: "GET",
-            url: `${url}/create`,
-            data: { type, action, id },
+            url: urlEndpoint,
             success: function (response) {
                 $(`#activity-detail-${type}`).html(response);
                 $(`#form-${type}`)[0].reset();

@@ -39,6 +39,8 @@ function openModal(target, type, id = null) {
     } else if (type === 'detail') {
         urlEndpoint = `${url}/${id}`;
         showAdd = false;
+    } else if (type === 'image') {
+        urlEndpoint = `${url}/image/${id}/layout`;
     }
     $.ajax({
         type: "get",

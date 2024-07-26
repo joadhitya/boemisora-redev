@@ -8,6 +8,7 @@ use App\Models\General\LogActivity;
 use App\Models\MasterData\WhatToDo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Intervention\Image\Facades\Image;
 
 class WhatToDoController extends Controller
 {
@@ -37,23 +38,16 @@ class WhatToDoController extends Controller
     public function store(Request $request)
     {
         try {
+            $payload = $request->all();
             $id = GeneralHelper::generateNanoId();
             if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $extensionTypeSplit = explode('/', $file->getMimeType());
-                $extensionType = $extensionTypeSplit[1];
-                $filename = 'what-to-do-' . uniqid() . '.' . $extensionType;
-                $file->move(public_path('upload/images/what-to-do'), $filename);
-                $request->merge([
-                    'image' => $filename
-                ]);
+                $image = GeneralHelper::uploadFile($request->file('image'), 'homepage', 'upload/images/what-to-do/');
+                $payload['image'] = $image;
             }
-            $request->merge([
-                'id' => $id,
-                'created_by' => GeneralHelper::getAuthInfo(),
-                'updated_by' => json_encode([]),
-            ]);
-            $data = WhatToDo::create($request->all());
+            $payload['id'] = $id;
+            $payload['created_by'] = GeneralHelper::getAuthInfo();
+            $payload['updated_by'] = json_encode([]);
+            $data = WhatToDo::create($payload);
             return response()->json([
                 'refference_id' => $id,
                 'data' => $data,
@@ -157,5 +151,12 @@ class WhatToDoController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function layoutImage(string $id, string $type)
+    {
+        // $data = WhatToDo::findOrFail($id);
+        $data = [];
+        return view('admin.master-data.what-to-do.layout-image', compact('data'));
     }
 }

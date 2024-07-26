@@ -17,29 +17,35 @@
         @forelse ($data as $key => $item)
             <tr @if ($item->is_favorite == 'yes') class="text-success font-weight-bold" @endif>
                 <td class="w-5p">{{ $key + 1 }}</td>
-                <td class="w-15p">
-                    {{-- @php
-                        $arrayCategory = explode(',', $item->id_category);
-                        $matchingCategoryArticles = [];
-                        $uniqueCategoryIds = [];
-
-                        foreach ($arrayCategory as $categoryId) {
-                            if (!in_array($categoryId, $uniqueCategoryIds)) {
-                                $matchingArticle = $category->firstWhere('id', $categoryId);
-                                if ($matchingArticle) {
-                                    $matchingCategoryArticles[] = $matchingArticle;
-                                    $uniqueCategoryIds[] = $categoryId;
-                                }
-                            }
-                        }
-                        $implodeResult = implode(', ', array_column($matchingCategoryArticles, 'name'));
-                        echo $implodeResult;
-                    @endphp --}}
+                <td class="w-15p">{{ $item->category->name }}
                 </td>
                 <td>{{ $item->headline }}</td>
                 <td class="w-15p">{{ date_format(date_create($item->date_archieve), 'd F Y') }}</td>
-                <td class="w-10p">XXX</td>
+                <td class="w-10p">{{ $item->status }}</td>
                 <td class="w-5p">
+
+                    <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <span class="text-muted sr-only">Action</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+
+                        <label class="dropdown-item pointer"
+                            onclick="activityDetail('homepage','detail','{{ $item->id }}')"><span
+                                class="mr-2 fe fe-info"></span>Detail</label>
+                        <label class="dropdown-item pointer"
+                            onclick="activityDetail('homepage','edit','{{ $item->id }}')"><span
+                                class="mr-2 fe fe-edit"></span>Edit</label>
+                        @if ($item->is_active == 'yes')
+                            <label class="dropdown-item pointer"
+                                onclick="manageData('hide','{{ $item->id }}')"><span
+                                    class="mr-2 fe fe-eye-off"></span>Hide</label>
+                        @elseif ($item->is_active == 'no')
+                            <label class="dropdown-item pointer"
+                                onclick="manageData('unhide','{{ $item->id }}')"><span
+                                    class="mr-2 fe fe-eye"></span>Unhide</label>
+                        @endif
+                    </div>
                     {{-- <div class="btn-group btn-group-sm" role="group">
                         @if ($item->is_favorite == 'yes')
                             <button type="button" class="btn p5x btn-sm btn-outline-secondary"

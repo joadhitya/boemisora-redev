@@ -37,14 +37,12 @@ class BlogController extends Controller
     {
         try {
             $payload = $request->all();
-
+            $payload['id'] = GeneralHelper::generateNanoId();
+            $payload['slug'] = Str::slug($request->title);
             if ($request->file('image')) {
                 $payload['image'] = GeneralHelper::uploadFile($request->file('image'), 'blog', 'upload/images/blog/');
             }
 
-            $payload['id'] = GeneralHelper::generateNanoId();
-            $payload['slug'] = Str::slug($request->title);
-            $payload['id_category'] = implode(",", $request->id_category);
             $data = Blog::create($payload);
             return response()->json([
                 'refference_id' => $payload['id'],
@@ -70,7 +68,7 @@ class BlogController extends Controller
     {
         try {
             if ($id == 'data') {
-                $data = Blog::get();
+                $data = Blog::with('category')->get();
                 return view('admin.content-management.blog-management.blog.display', ["data" => $data]);
             } else {
                 $data = Blog::findOrFail($id);
@@ -99,7 +97,9 @@ class BlogController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data = Blog::findOrFail($id);
+        $categories = CategoryBlog::get();
+        return view('admin.content-management.blog-management.blog.form', ["data" => $data, "type" => 'edit', "categories" => $categories]);
     }
 
     /**

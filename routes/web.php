@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ContentManagement\BalePageController;
 use App\Http\Controllers\Admin\ContentManagement\BlogController;
 use App\Http\Controllers\Admin\ContentManagement\EcoparkPageController;
+use App\Http\Controllers\Admin\ContentManagement\GeneralContentController;
 use App\Http\Controllers\Admin\ContentManagement\HomePageController;
 use App\Http\Controllers\Admin\ContentManagement\OurStoryPageController;
 use App\Http\Controllers\Admin\GeneralController;
@@ -42,9 +43,11 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('md-social-media', SocialMediaController::class);
             // CMS
             Route::resource('md-what-to-do', WhatToDoController::class);
+            Route::get('md-what-to-do/image/{id}/{type}', [WhatToDoController::class, 'layoutImage']);
             Route::resource('md-category-blog', CategoryBlogController::class);
         });
         Route::group(['prefix' => 'content-management'], function () {
+            Route::resource('general-content', GeneralContentController::class);
             // PAGES
             Route::resource('homepage', HomePageController::class);
             Route::post('homepage/layout-homepage', [HomePageController::class, 'layoutImage']);
